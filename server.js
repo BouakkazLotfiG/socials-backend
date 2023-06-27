@@ -10,8 +10,12 @@ import { fileURLToPath } from 'url';
 import morgan from 'morgan';
 
 import { register } from './controllers/authController.js';
+import { createPost } from './controllers/postController.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import postRoutes from './routes/postRoutes.js';
+
+import { verifyToken } from './middleware/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,10 +46,12 @@ const upload = multer({ storage: storage });
 
 //Routes with file upload
 app.post('/auth/register', upload.single('picture'), register);
+app.post('/posts', verifyToken, upload.single('picture'), createPost);
 
 //Routes
 app.use('/auth', authRoutes);
-app.get('/users', userRoutes);
+app.use('/users', userRoutes);
+app.use('/posts', postRoutes);
 
 //connectio to database
 const host = 'localhost';
