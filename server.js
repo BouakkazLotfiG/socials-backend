@@ -11,6 +11,7 @@ import morgan from 'morgan';
 
 import { register } from './controllers/authController.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,6 +45,7 @@ app.post('/auth/register', upload.single('picture'), register);
 
 //Routes
 app.use('/auth', authRoutes);
+app.get('/users', userRoutes);
 
 //connectio to database
 const host = 'localhost';
