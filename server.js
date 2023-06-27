@@ -9,6 +9,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import morgan from 'morgan';
 
+import { register } from './controllers/authController.js';
+import authRoutes from './routes/authRoutes.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
@@ -35,6 +38,12 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+
+//Routes with file upload
+app.post('/auth/register', upload.single('picture'), register);
+
+//Routes
+app.use('/auth', authRoutes);
 
 //connectio to database
 const host = 'localhost';
