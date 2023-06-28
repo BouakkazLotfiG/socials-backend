@@ -10,10 +10,14 @@ import { fileURLToPath } from 'url';
 import morgan from 'morgan';
 
 import { register } from './controllers/authController.js';
-import { createPost } from './controllers/postController.js';
+import { createPost } from './controllers/postsController.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import postRoutes from './routes/postRoutes.js';
+import postRoutes from './routes/postsRoutes.js';
+
+import User from './models/userModel.js';
+import Post from './models/postModel.js';
+import { users, posts } from './data/index.js';
 
 import { verifyToken } from './middleware/auth.js';
 
@@ -61,7 +65,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
-    app.listen(PORT, host, () => console.log(`Server running on port: ${PORT}`))
-  )
+  .then(() => {
+    app.listen(PORT, host, () =>
+      console.log(`Server running on port: ${PORT}`)
+    );
+    // User.insertMany(users);
+    // Post.insertMany(posts);
+  })
   .catch((error) => console.log(error.message));

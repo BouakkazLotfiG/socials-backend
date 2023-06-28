@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 
@@ -29,6 +29,7 @@ export const register = async (req, res) => {
       impressions: Math.floor(Math.random() * 100),
     });
     const savedUser = await newUser.save();
+    console.log('register');
     res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -39,14 +40,14 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
-    if (!user) return res.sattus(400).json({ msg: 'User does not exist.' });
+    if (!user) return res.status(400).json({ msg: 'User does not exist.' });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials.' });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     delete user.password;
-
+    console.log('login');
     res.status(200).json({ token, user });
   } catch (error) {
     res.status(500).json({ error: error.message });

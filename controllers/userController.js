@@ -1,13 +1,13 @@
 import User from '../models/userModel.js';
 
+/* READ */
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
-    const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(user);
-  } catch (error) {
-    res.status(404).json(error);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
   }
 };
 
@@ -15,23 +15,30 @@ export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
+    console.log(
+      '🚀 ~ file: userController.js:18 ~ getUserFriends ~ user:',
+      user
+    );
 
     const friends = await Promise.all(
-      user.friends.map((friendId) => {
-        return User.findById(friendId);
-      })
+      user.friends.map((id) => User.findById(id))
     );
-    const friendList = friends.map((friend) => {
-      const { _id, firstName, lastName, occupation, location, picturePath } =
-        friend;
-      return { _id, firstName, lastName, occupation, location, picturePath };
-    });
-    res.status(200).json(friendList);
-  } catch (error) {
-    res.status(404).json(error);
+    const formattedFriends = friends.map(
+      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+        return { _id, firstName, lastName, occupation, location, picturePath };
+      }
+    );
+    console.log(
+      '🚀 ~ file: userController.js:27 ~ getUserFriends ~ formattedFriends:',
+      formattedFriends
+    );
+    res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
   }
 };
 
+/* UPDATE */
 export const addRemoveFriend = async (req, res) => {
   try {
     const { id, friendId } = req.params;
