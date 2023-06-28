@@ -32,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/BouakkazLotfiG/socials-backend/issues"
   },
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "homepage": "https://github.com/BouakkazLotfiG/socials-backend#readme"
 }
